@@ -1,0 +1,87 @@
+﻿@inject NavigationManager Navigation;
+@implements IDisposable
+@inject IShoppingCartService shoppingCartService
+@using BonozWeb.Shared.Locals
+@using Microsoft.Extensions.Localization;
+@using BonozWeb.Shared;
+@using System.Globalization;
+@inject IStringLocalizer<Resource> localizer;
+
+
+
+<a href="ShoppingCart" class="btn btn-info">
+    <i class="oi oi-cart"></i>&nbsp;@localizer["MenuCart"]
+    <span class="badge bg-dark">@shoppingCartItemCount</span>
+</a>
+
+<a href="#" class="btn btn-info">
+   @localizer["MenuHome"]
+</a>
+
+<a href="AllProducts" class="btn btn-info">
+    @localizer["MenuOurService"]
+</a>
+
+<a href="Register" class="btn btn-info">
+    @localizer["MenuRegister"]
+</a>
+
+<a href="Login" class="btn btn-info">
+  @localizer["MenuLogin"] 
+</a>
+
+<a href="Contact" class="btn btn-info">
+    @localizer["MenuContact"]
+</a>
+
+<a href="about" class="btn btn-info">
+  @localizer["MenuAbout"]
+</a>
+
+<select @bind="Culture" class="btn btn-dark">
+    <option value="en-US">English</option>
+    <option value="bn-BD">বাংলা</option>
+</select>
+
+
+@code {
+    private int shoppingCartItemCount = 0;
+
+    protected override void OnInitialized()
+    {
+        Culture = CultureInfo.CurrentCulture;
+        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged;
+    }
+
+    protected void ShoppingCartChanged(int totalQty)
+    {
+        shoppingCartItemCount = totalQty;
+        StateHasChanged();
+    }
+
+    private CultureInfo Culture
+    {
+        get
+        {
+            return CultureInfo.CurrentCulture;
+        }
+
+        set
+        {
+            if (CultureInfo.CurrentCulture != value)
+            {
+                var uri = new Uri(Navigation.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                var cultureEscaped = Uri.EscapeDataString(value.Name);
+                var uriEscaped = Uri.EscapeDataString(uri);
+
+                Navigation.NavigateTo($"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", forceLoad: true);
+            }
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged;
+    }
+
+}

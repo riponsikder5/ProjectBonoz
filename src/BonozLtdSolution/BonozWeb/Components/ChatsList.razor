@@ -1,0 +1,20 @@
+﻿@inherits ChatsListBase
+
+<h3>Chats</h3>
+<ul class="list-group list-group-flush">
+    @if (Loading)
+    {
+        <li class="list-group-item">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </li>
+    }
+    else
+    {
+        @foreach (var chat in Chats)
+        {
+            <li class="list-group-item @(chat.IsSelected ? "bg-success text-white" : "")" @onclick="() => HandleUserClick(chat)">@chat.Name</li>
+        }
+    }
+</ul>
+

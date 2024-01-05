@@ -1,0 +1,119 @@
+﻿@page "/Checkout"
+@inherits CheckoutBase
+
+<style>
+    /* HIDE RADIO */
+    .hiddenradio [type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+        /* IMAGE STYLES */
+        .hiddenradio [type=radio] + img {
+            cursor: pointer;
+            border: 2px solid #fff; /* Add a white border to all images */
+            border-radius: 5px; /* Add some border radius to make it look like a card */
+            transition: border 0.2s ease; /* Add a smooth transition effect for the border */
+        }
+
+        /* CHECKED STYLES */
+        .hiddenradio [type=radio]:checked + img {
+            outline: none; /* Remove the default outline */
+            border: 2px solid #007bff; /* Change the border color to blue or any color you like */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.7); /* Add a box-shadow to create the card effect */
+        }
+</style>
+
+<h3 class="mb-5">Checkout</h3>
+<EditForm Model="OrderDTO" OnSubmit="HandleSubmit">
+    <div class="row">
+        <div class="col-md-6 card">
+            <h4 class="mb-2">Payment System</h4>
+            <div class="hiddenradio mt-4">
+               @*  <label>
+                    <input type="radio" name="paymentSystem" id="bKash" @onchange="() => UpdatePaymentDescription('b')" />
+                    <img style="width: 100px; height: 70px" src="/Images/Icons/bkashIcon.png" alt="bKash">
+                </label>
+
+                <label>
+                    <input type="radio" name="paymentSystem" id="Nogod" @onchange="() => UpdatePaymentDescription('n')" />
+                    <img style="width: 100px; height: 70px" src="/Images/Icons/nogodIcon.png" alt="nogod">
+                </label> *@
+                <label>
+                    <input type="radio" name="paymentSystem" id="cashOn" @onclick="(e) => UpdatePaymentDescription('c')" />
+                    <img style="width:100px; height: 70px" src="/Images/Icons/cashOnIcon.jpg" alt="cash On" />
+                </label>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-center"> Address </h3>
+                @if (Address.Id == 0)
+                {
+                    <button class="btn btn-success btn-sm" @onclick="CreateAddress">Add Address</button>
+                }
+                else
+                {
+                    <button class="btn btn-success btn-sm" @onclick="() => EditAddress(Address.UserId)">Edit Address</button>
+                }
+
+                @if (Address.Id != 0)
+                {
+                    <div class="card dataForm">
+                        <div class="row m-3">
+                            <label> <strong>House Number : </strong> @Address.HouseNumber</label>
+                            <label> <strong>Road Number : </strong> @Address.RoadNumber</label>
+                            <label> <strong>Village : </strong> @Address.Village</label>
+                            <label> <strong>District : </strong> @Address.District</label>
+                            <label> <strong>Police Station : </strong> @Address.PoliceStation</label>
+                            <label> <strong>Division : </strong> @Address.Division</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        @if (ShoppingCartItems == null)
+        {
+            <DisplaySpinner />
+        }
+        else
+        {
+            <div class="col-md-6 card">
+                <h4 class="mb-2">Payment Summary</h4>
+                @if (ShoppingCartItems.Count() > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ShoppingCartItems)
+                            {
+                                <tr>
+                                    <td>@item.Quantity x @item.ProductName</td>
+                                    <td>@item.TotalPrice.ToString("C")</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td><b>Total</b></td>
+                                <td><b>@PaymentAmount.ToString("C")</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @if (OrderDTO.PaymentDescription != null)
+                    {
+                        <button class="btn btn-info btn-sm update-qty">Place Order </button>
+                    }
+                }
+                else
+                {
+                    <p>You currently have no items in your shopping cart</p>
+                }
+            </div>
+        }
+    </div>
+</EditForm>

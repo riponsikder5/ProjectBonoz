@@ -1,0 +1,31 @@
+﻿@page "/ShopList"
+
+@inherits ShopListBase
+
+@if (Shops == null && ErrorMessage == null)
+{
+    <DisplaySpinner />
+}
+else if (ErrorMessage != null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage" />
+}
+else
+{
+    @* <button type="button" class="btn btn-primary mb-3" @onclick="CreateShop">Create</button> *@
+
+    <RadzenGrid TItem="Shop" Data="@Shops" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowSorting="true" PageSize="10">
+        <Columns>
+            <RadzenGridColumn TItem="Shop" Property="Name" Title="Shop Name"></RadzenGridColumn>
+            <RadzenGridColumn TItem="Shop" Property="Description" Title="Shop Description"></RadzenGridColumn>
+            <RadzenGridColumn TItem="Shop" Property="Status" Title="Status"></RadzenGridColumn>
+            <RadzenGridColumn TItem="Shop" Width="100px" TextAlign="TextAlign.Center">
+                <Template Context="Shop">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="edit" Click="@(args => EditShop(Shop.Id))"></RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+
+}
+

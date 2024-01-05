@@ -1,0 +1,132 @@
+﻿@page "/Orders"
+@inherits OrdersBase;
+@using System;
+@using System.Globalization
+
+<div class="container">
+    <article class="card">
+        <header class="card-header"> <strong> My Orders / Tracking </strong>  </header>
+        <div class="card-body">
+
+            @foreach (var order in Orders)
+            {
+
+                var confirmed = "";
+                var pickupedByCourier = "";
+                var readyForDelivery = "";
+                var deliveryCompleted = "";
+                var cancle = "";
+
+                @if (order.Status == OrderStatus.Ordered)
+                {
+                    confirmed = "active";
+                }
+                else if (order.Status == OrderStatus.PickupedByCourier)
+                {
+                    confirmed = "active";
+                    pickupedByCourier = "active";
+
+                }
+                else if (order.Status == OrderStatus.ReadyForDelivery)
+                {
+                    confirmed = "active";
+                    pickupedByCourier = "active";
+                    readyForDelivery = "active";
+                }
+                else if (order.Status == OrderStatus.DeliveryCompleted)
+                {
+                    confirmed = "active";
+                    pickupedByCourier = "active";
+                    readyForDelivery = "active";
+                    deliveryCompleted = "active";
+                }
+                else if (order.Status == OrderStatus.OtherIssue)
+                {
+
+                }
+                else
+                {
+                    cancle = "active";
+                    confirmed = "active";
+                }
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6> <strong>Order ID :</strong>  @order.Id</h6>
+                    </div>
+                    <div class="col-md-2">
+                        <h6> <strong>Amount : </strong>  ৳@order.TotalAmount.ToString("#,##0")</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <h6> <strong>Order Date :</strong>  @order.FormattedOrderDate</h6>
+                    </div>
+                    <div class="col-md-3">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" @onclick="@(args => ShowDetails(@order.Id))" data-bs-target="#staticBackdrop">
+                            Show Details
+                        </button>
+                    </div>
+
+                </div>
+                @if (order.Status == OrderStatus.OrderCancle)
+                {
+                    <div class="track">
+                        <div class="step @confirmed"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Ordered</span> </div>
+                        <div class="step @cancle"> <span class="icon"> <i class="fa fa-times"></i> </span> <span class="text"> Canceled </span> </div>
+                    </div>
+
+                }
+                else if (order.Status == OrderStatus.OtherIssue)
+                {
+                    <h4>Some technical issue your order canceled, Stay with us and order again</h4>
+                    <h6>Thank You</h6>
+                }
+                else
+                {
+                    <div class="track">
+                        <div class="step @confirmed"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Ordered</span> </div>
+                        <div class="step @pickupedByCourier"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                        <div class="step @readyForDelivery"> <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                        <div class="step @deliveryCompleted"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Delivered</span> </div>
+                    </div>
+                }
+            }
+        </div>
+    </article>
+</div>
+
+@if (Popup)
+{
+    <div class="modal" rold="dialog" style="display:block" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HidePopup"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="row">
+                        @if (OrderDetailsDTO.Count > 0)
+                        {
+                            @foreach (var orderDetails in OrderDetailsDTO)
+                            {
+                                <li class="col-md-4">
+                                    <figure class="itemside mb-3">
+                                        <div class="aside"><img src="@orderDetails.ImageURL" class="img-sm border"></div>
+                                        <figcaption class="info align-self-center">
+                                            <p class="title">@orderDetails.ProductName <br /> @orderDetails.Quantity</p>
+                                            <span class="text-muted">@orderDetails.Price </span>
+                                        </figcaption>
+                                    </figure>
+                                </li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+

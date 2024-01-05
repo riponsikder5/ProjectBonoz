@@ -1,0 +1,83 @@
+﻿@implements IDisposable
+@inject IShoppingCartService shoppingCartService
+
+@inject BlogAuthenticationStateProvider BlogAuthStateProvider
+@inject NavigationManager NavigationManager
+
+
+<div class="container">
+    <header class="d-flex top-row justify-content-center justify-content-md-between flex-wrap py-3 mb-4 border-white border-bottom border-5">
+        <ul class="nav">
+            <li>
+                <NavLink href="/" class="link-light nav-link">Home</NavLink>
+            </li>
+            <li>
+                <NavLink href="About" class="link-light nav-link">About</NavLink>
+            </li>
+
+            <li>
+                <NavLink href="AllProducts" class="link-light nav-link">Our Service</NavLink>
+            </li>
+            <AuthorizeView>
+                <Authorized>
+                    <li>
+                        <NavLink href="Shop" class="link-light nav-link ">Create Shop</NavLink>
+                    </li>
+@*                     <li>
+                        <NavLink href="chat" class="link-light nav-link">Specialize  Dr.'s</NavLink>
+                    </li> *@
+                    <li>
+                        <NavLink href="Orders" class="link-light nav-link ">My Order</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="ShoppingCart" class="link-light nav-link">
+                            <i class="oi oi-cart"></i>Cart
+                            <span class="badge bg-dark ">@shoppingCartItemCount</span>
+                        </NavLink>
+                    </li>
+                   
+                </Authorized>
+            </AuthorizeView>
+        </ul>
+
+        <div class="text-end">
+            <AuthorizeView>
+                <Authorizing>Checking auth state...</Authorizing>
+                <Authorized>
+                    <NavLink href="javascript:void()" class="btn btn-light disabled">@context.User?.Identity?.Name</NavLink>
+                        <button type="button" class="btn btn-primary" @onclick="LogoutAsync">Logout</button>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink href="/login" class="btn btn-primary">Login</NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+        </header>
+    </div>
+
+    @code {
+
+    private int shoppingCartItemCount = 0;
+
+    protected override void OnInitialized()
+    {
+        shoppingCartService.OnShoppingCartChanged += ShoppingCartChanged;
+    }
+
+    protected void ShoppingCartChanged(int totalQty)
+    {
+        shoppingCartItemCount = totalQty;
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        shoppingCartService.OnShoppingCartChanged -= ShoppingCartChanged;
+    }
+
+    private async Task LogoutAsync()
+    {
+        await BlogAuthStateProvider.LogoutAsync();
+        NavigationManager.NavigateTo("/");
+    }
+}

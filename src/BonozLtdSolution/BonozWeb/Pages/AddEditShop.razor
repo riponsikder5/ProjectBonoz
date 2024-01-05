@@ -1,0 +1,40 @@
+﻿@page "/Shop"
+@page "/Shop/{id:int}"
+@inherits AddEditShopBase
+
+<EditForm Model="Shop" OnSubmit="HandleSubmit">
+    <h3 class="text-center"> Shop Create</h3>
+    <div class="card dataForm ">
+        <div class="row m-3 ">
+            <div class="col-md-4 mb-3">
+                <label for="name">Name</label>
+                <InputText id="name" @bind-Value="Shop.Name" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="description">Description</label>
+                <InputText id="description" @bind-Value="Shop.Description" class="form-control"></InputText>
+            </div>
+        </div>
+
+        @if(Shop.Id > 0)
+        {
+            <div class="col-md-3 mb-3">
+                <label for="orderStatus">Shop Status</label>
+                <InputSelect id="orderStatus" @bind-Value="Shop.Status" class="form-control">
+                    <option value=" "> </option>
+                    @foreach (ShopStatus status in Enum.GetValues(typeof(ShopStatus)))
+                    {
+                        <option value="@status">@GetShopStatusDisplayName(status)</option>
+                    }
+                </InputSelect>
+            </div>
+        }
+
+        <br />
+        <div>
+            <button type="submit" class="btn btn-primary m-2">@btnText</button>
+            <button type="button" class="btn btn-secondary m-2" @onclick="CancelShop">Cancel</button>
+        </div>
+
+    </div>
+</EditForm>

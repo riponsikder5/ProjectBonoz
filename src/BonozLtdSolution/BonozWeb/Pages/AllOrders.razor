@@ -1,0 +1,142 @@
+﻿@page "/AllOrders"
+@inherits AllOrdersBase
+
+
+<EditForm Model="AllOrdersDTO" OnSubmit="HandleSubmit">
+    <div class="card dataForm">
+        <h3>Orders Table</h3>
+        <div class="row m-3">
+            <div class="col-md-4 mb-3">
+                <label for="fromDate">From Date</label>
+                <InputDate id="fromDate" @bind-Value="AllOrdersDTO.FromDate" class="form-control"></InputDate>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="toDate">To Date</label>
+                <InputDate id="toDate" @bind-Value="AllOrdersDTO.ToDate" class="form-control"></InputDate>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label for="orderStatus">Order Status</label>
+                <InputSelect id="orderStatus" @bind-Value="AllOrdersDTO.OrderStatus" class="form-control">
+                    <option value=" "> </option>
+                    @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                    {
+                        <option value="@status">@GetDisplayName(status)</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col-md-1 mb-3 pt-4">
+                <button type="submit" class="btn btn-primary mb-3">Search</button>
+            </div>
+        </div>
+        <br />
+    </div>
+</EditForm>
+
+
+@if (Orders == null && ErrorMessage == null)
+{
+    <DisplaySpinner />
+}
+else if (ErrorMessage != null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage" />
+}
+else
+{
+
+    <RadzenGrid TItem="OrderDTO" Data="@Orders" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowSorting="true" PageSize="10">
+        <Columns>
+            <RadzenGridColumn TItem="OrderDTO" Property="Id" Title="Id"></RadzenGridColumn>
+            <RadzenGridColumn TItem="OrderDTO" Property="Status" Title="Order Status"></RadzenGridColumn>
+            <RadzenGridColumn TItem="OrderDTO" Property="PaymentDescription" Title="Payment Type"></RadzenGridColumn>
+            <RadzenGridColumn TItem="OrderDTO" Property="TotalAmount" Title="Total Amount"></RadzenGridColumn>
+            <RadzenGridColumn TItem="OrderDTO" Property="FormattedOrderDate" Title="Order Date"></RadzenGridColumn>
+
+            <RadzenGridColumn TItem="OrderDTO" Width="100px" TextAlign="TextAlign.Center">
+                <Template Context="orders">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="edit" Click="@(args => GetOrder(orders.Id))"></RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@(args => ShowDeletePopup(orders.Id))"></RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+
+        </Columns>
+    </RadzenGrid>
+}
+
+
+
+@if (Popup)
+{
+    <div class="modal" rold="dialog" style="display:block" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HidePopup"></button>
+                </div>
+
+                <EditForm Model="OrderDTO" OnSubmit="EditOrder">
+                    <div class="modal-body">
+                        <div class="row m-3 ">
+                            <div class="col-md-4 mb-3">
+                                <label for="orderStatus">Order Status</label>
+                                <InputSelect id="orderStatus" @bind-Value="OrderDTO.Status" class="form-control">
+                                    <option value=" "> </option>
+                                    @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                                    {
+                                        <option value="@status">@GetDisplayName(status)</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="TotalAmount">Total Amount</label>
+                                <InputText @bind-Value="OrderDTO.PaymentDescription" disabled class="form-control"></InputText>
+                            </div>
+                           <div class="col-md-4 mb-3">
+                                <label for="TotalAmount">Total Amount</label>
+                                <InputNumber @bind-Value="OrderDTO.TotalAmount" disabled class="form-control"></InputNumber>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="HidePopup">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (DeletePopup)
+{
+    <div class="modal" rold="dialog" style="display:block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HidePopup"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this record? </p>
+                    <div class="card-body row">
+                        <div class="col-md-6">
+                            <h6> <strong>Payment Type :</strong>  @OrderDTO.PaymentDescription</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6> <strong>Amount : </strong>  ৳@OrderDTO.TotalAmount.ToString("#,##0")</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="HidePopup">No</button>
+                    <button type="button" class="btn btn-danger" @onclick="DeleteOrder">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

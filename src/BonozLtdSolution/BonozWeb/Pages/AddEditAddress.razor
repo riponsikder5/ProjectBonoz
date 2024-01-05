@@ -1,0 +1,40 @@
+﻿@page "/AddEditAddress"
+@page "/AddEditAddress/{id:int}"
+@inherits AddEditAddressBase
+
+<EditForm Model="AddressDTO" OnSubmit="HandleSubmit">
+    <h3 class="text-center"> Address </h3>
+    <div class="card dataForm ">
+        <div class="row m-3 ">
+            <div class="col-md-4 mb-3">
+                <label for="HouseNumber">House Number</label>
+                <InputText @bind-Value="AddressDTO.HouseNumber" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="RoadNumber">Road Number</label>
+                <InputText  @bind-Value="AddressDTO.RoadNumber" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Village">Village</label>
+                <InputText  @bind-Value="AddressDTO.Village" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="District">District</label>
+                <InputText @bind-Value="AddressDTO.District" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="PoliceStation">Police Station</label>
+                <InputText @bind-Value="AddressDTO.PoliceStation" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="Division">Division</label>
+                <InputText @bind-Value="AddressDTO.Division" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <br />
+        <div>
+            <button type="submit" class="btn btn-primary m-2">@btnText</button>
+        </div>
+    </div>
+</EditForm>

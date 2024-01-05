@@ -1,0 +1,17 @@
+﻿@page "/"
+@using System.Globalization;
+@using BonozWeb.Shared.Locals
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Resource> localizer;
+<div class="main">
+    <div class="content bg-image">
+            <div class="mainfont">
+            <p>@localizer["HomeTitle"]</p>
+            </div>
+            <div>
+            <p class="par">@localizer["HomeDescription"] </p>
+        </div>
+
+
+        </div>
+</div>

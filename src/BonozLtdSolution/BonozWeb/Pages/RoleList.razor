@@ -1,0 +1,28 @@
+﻿@page "/RoleList"
+
+@inherits RoleListBase
+
+@if (Users == null && ErrorMessage == null)
+{
+    <DisplaySpinner />
+}
+else if (ErrorMessage != null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage" />
+}
+else
+{
+    <RadzenGrid TItem="User" Data="@Users" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowSorting="true" PageSize="10">
+        <Columns>
+            <RadzenGridColumn TItem="User" Property="Name" Title="User Name"></RadzenGridColumn>
+            <RadzenGridColumn TItem="User" Property="Role" Title="Role"></RadzenGridColumn>
+            <RadzenGridColumn TItem="Shop" Width="100px" TextAlign="TextAlign.Center">
+                <Template Context="User">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="edit" Click="@(args => EditRole(User.Id))"></RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+
+}
+

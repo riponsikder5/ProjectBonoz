@@ -1,0 +1,17 @@
+﻿
+.bg-image {
+    background-image: url('./css/images/image.PNG');
+    background-size: cover;
+    height: 700px;
+}
+
+.mainfont {
+    padding: 2.5rem;
+    text-align: center;
+    font-size: 45px;
+}
+.par {
+    padding: 1.8rem;
+    font-size: 20px;
+    text-align:justify;
+}

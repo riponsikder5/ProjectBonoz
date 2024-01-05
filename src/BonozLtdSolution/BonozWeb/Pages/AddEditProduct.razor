@@ -1,0 +1,73 @@
+﻿@page "/AddEditProduct"
+@page "/AddEditProduct/{id:int}"
+
+@inherits AddEditProductBase
+
+<EditForm Model="ProductDTO" OnSubmit="HandleSubmit">
+    <h3 class="text-center"> Product </h3>
+    <div class="card dataForm ">
+        <div class="row m-3 ">
+
+            <div class="col-md-4 mb-3">
+                <label for="name">Name</label>
+                <InputText id="name" @bind-Value="ProductDTO.Name" class="form-control"></InputText>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="description">Description</label>
+                <InputText id="description" @bind-Value="ProductDTO.Description" class="form-control"></InputText>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="price">Price</label>
+                <InputNumber id="price" @bind-Value="ProductDTO.Price" class="form-control"></InputNumber>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="quantity">Quantity</label>
+                <InputNumber id="quantity" @bind-Value="ProductDTO.Quantity" class="form-control"></InputNumber>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label>Product Category</label><br />
+                <InputSelect @bind-Value="ProductDTO.CategoryId" class="form-select">
+                    @foreach (var category in ProductCategories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </InputSelect>
+            </div>
+           
+            <div class="col-md-4 mb-3">
+                <label>Shop Name</label><br />
+                <InputSelect @bind-Value="ProductDTO.ShopId" class="form-select">
+                    @foreach (var shop in Shops)
+                    {
+                        <option value="@shop.Id">@shop.Name</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="imageUpload">Image Upload</label>
+                <InputFile id="imageUpload" OnChange="HandleFileSelection" class="form-control"></InputFile>
+            </div>
+            @if (@ProductDTO.ImageURL != null)
+            {
+                <div class="col-md-4 mb-3">
+                    <img class="img-thumbnail" style="width:100px; height:100px" src="@ProductDTO.ImageURL">
+                </div>
+            }
+           
+        </div>
+        
+        <br />
+        <div>
+            <button type="submit" class="btn btn-primary m-2">@btnText</button>
+            @if (Id >= 0)
+            {
+                <button type="button" class="btn btn-danger m-2" @onclick="DeleteProduct">Delete</button>
+            }
+        </div>
+    </div>
+</EditForm>

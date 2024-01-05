@@ -1,0 +1,26 @@
+﻿@page "/AddEditCategory"
+@page "/AddEditCategory/{id:int}"
+@inherits AddEditCategoryBase
+
+<EditForm Model="ProductCategoryDTO" OnSubmit="HandleSubmit">
+    <h3 class="text-center"> Product Category</h3>
+    <div class="card dataForm ">
+        <div class="row m-3 ">
+            <div class="col-md-4 mb-3">
+                <label for="name">Name</label>
+                <InputText id="name" @bind-Value="ProductCategoryDTO.Name" class="form-control"></InputText>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="description">Description</label>
+                <InputText id="description" @bind-Value="ProductCategoryDTO.IconCSS" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <br />
+        <div>
+            <button type="submit" class="btn btn-primary m-2">@btnText</button>
+            <button type="button" class="btn btn-secondary m-2" @onclick="CancelProductCategory">Cancel</button>
+
+        </div>
+    </div>
+</EditForm>

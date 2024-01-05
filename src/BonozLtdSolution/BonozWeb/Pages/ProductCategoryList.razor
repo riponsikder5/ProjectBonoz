@@ -1,0 +1,30 @@
+﻿@page "/ProductCategory"
+@inherits ProductCategoryListBase
+@using Radzen.Blazor
+
+@if (ProductCategory == null && ErrorMessage == null)
+{
+    <DisplaySpinner />
+}
+else if (ErrorMessage != null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage" />
+}
+else
+{
+    <button type="button" class="btn btn-primary mb-3" @onclick="CreateCategory">Create</button>
+
+    <RadzenGrid TItem="ProductCategoryDTO" Data="@ProductCategory" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowSorting="true" PageSize="5" ColumnWidth="150px">
+        <Columns>
+            <RadzenGridColumn TItem="ProductCategoryDTO" Property="Id" Title="ID"></RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductCategoryDTO" Property="Name" Title="Category Name"></RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductCategoryDTO" Property="IconCSS" Title="Description"></RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductCategoryDTO" Width="100px" TextAlign="TextAlign.Center">
+                <Template Context="category">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="edit" Click="@(args => EditCategory(category.Id))"></RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@(args => DeleteCategory(category.Id))"></RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+}

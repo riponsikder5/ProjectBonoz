@@ -1,0 +1,42 @@
+﻿@page "/ProductList"
+
+@inherits ProductListBase
+
+@if (Products == null && ErrorMessage == null)
+{
+    <DisplaySpinner />
+}
+else if (ErrorMessage != null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage" />
+}
+else
+{
+    <button type="button" class="btn btn-primary mb-3" @onclick="CreateProduct">Create</button>
+
+    <RadzenGrid TItem="ProductDTO" Data="@Products" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowSorting="true" PageSize="10">
+        <Columns>
+            <RadzenGridColumn TItem="ProductDTO" Title="Image">
+                <Template Context="product">
+                    <img src="@product.ImageURL" alt="@product.Name" style="max-width: 50px; max-height: 50px; " />
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductDTO" Property="Name" Title="Product Name"></RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductDTO" Title="Description">
+                <Template Context="product">
+                    <span title="@product.Description">@product.Description</span>
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductDTO" Property="Price" Title="Price"></RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductDTO" Property="Quantity" Title="Quantity"></RadzenGridColumn>
+            <RadzenGridColumn TItem="ProductDTO" Width="100px" TextAlign="TextAlign.Center">
+                <Template Context="product">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="edit" Click="@(args => EditProduct(product.Id))"></RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Click="@(args => DeleteProduct(product.Id))"></RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+
+}
+

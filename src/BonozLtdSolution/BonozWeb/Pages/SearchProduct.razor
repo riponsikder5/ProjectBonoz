@@ -1,0 +1,19 @@
+﻿<div>
+    <input type="text" @bind-value="filter" />
+    <button class="btn-sm btn-primary" @onclick="SeeachBarHandler">
+        <i class="oi oi-magnifying-glass"></i>&nbsp;Search
+    </button>
+</div>
+
+@code {
+    private string filter;
+
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    private void SeeachBarHandler()
+    {
+        OnSearch.InvokeAsync(filter);
+    }
+}
+
